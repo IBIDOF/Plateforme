@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>نظام إدارة الخسائر الجماعية</title>
+    <style>
+        body { font-family: Arial; background: #f4f4f4; padding: 20px; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 8px; }
+        .row-card { border: 1px solid #ddd; padding: 15px; margin-bottom: 10px; border-radius: 5px; }
+        .controls { display: flex; justify-content: space-between; margin-top: 20px; }
+        button { padding: 10px 20px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 4px; }
+        input { padding: 8px; margin: 5px 0; width: 100%; box-sizing: border-box; }
+        .auth-section { background: #e9ecef; padding: 15px; margin-top: 15px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>نظام تحديث بيانات الخسائر</h2>
+        <div id="content">جاري تحميل البيانات...</div>
+        
+        <div class="controls">
+            <button onclick="prev()">السابق</button>
+            <span id="pageInfo"></span>
+            <button onclick="next()">التالي</button>
+        </div>
+
+        <div class="auth-section">
+            <h4>تحديث البيانات (للموظفين فقط)</h4>
+            <input type="password" id="secretCode" placeholder="أدخل الكود السري (الإنارة أو البيئة)">
+            <input type="text" id="statusUpdate" placeholder="أدخل ملاحظات المصلحة أو حالة الإنجاز">
+            <button onclick="submitUpdate()" style="background: #28a745; width: 100%;">إرسال التحديث</button>
+        </div>
+    </div>
+
+    <script>
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbyEe0bAd5x_fTbwl3w6rjVfEHhXPHDs56kh9f0MTMqROtTLSniePg_kcYroGeBlW-LgpA/exec';
+        let allData = [];
+        let currentIndex = 1;
+
+        async function loadData() {
+            // ملاحظة: ستحتاج لاستخدام fetch لجلب البيانات من الـ Script
+            // للتبسيط في العرض الأولي سنفترض تحميل البيانات
+            document.getElementById('content').innerHTML = "يرجى ربط API لجلب البيانات المباشرة";
+        }
+
+        function displayRow() {
+            if (allData.length === 0) return;
+            const row = allData[currentIndex];
+            document.getElementById('content').innerHTML = `
+                <div class="row-card">
+                    <p><strong>الرقم:</strong> ${row[0]}</p>
+                    <p><strong>الموقع:</strong> ${row[3]}</p>
+                    <p><strong>الضرر:</strong> ${row[4]}</p>
+                    <p><strong>حالة الإنارة:</strong> ${row[5] || '---'}</p>
+                    <p><strong>حالة البيئة:</strong> ${row[6] || '---'}</p>
+                </div>
+            `;
+            document.getElementById('pageInfo').innerText = `مورد رقم ${currentIndex} من ${allData.length - 1}`;
+        }
+
+        function next() { if(currentIndex < allData.length -1) { currentIndex++; displayRow(); } }
+        function prev() { if(currentIndex > 1) { currentIndex--; displayRow(); } }
+
+        function submitUpdate() {
+            const code = document.getElementById('secretCode').value;
+            const value = document.getElementById('statusUpdate').value;
+            const rowId = allData[currentIndex][0];
+
+            fetch(`${scriptURL}?code=${code}&rowId=${rowId}&value=${value}`, { method: 'POST' })
+            .then(res => alert("تم إرسال الطلب للمعالجة"));
+        }
+    </script>
+</body>
+</html>
+
