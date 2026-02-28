@@ -1,5 +1,5 @@
 // --- CONFIGURATION ---
-const API_KEY = 'VOTRE_CLE_API_GOOGLE'; // Remplacez par votre clé
+const API_KEY = 'https://script.google.com/macros/s/AKfycby8KcjB2ibJOk_XRPhhA77rrXp4YxPXsUnR-8BCzrQZiQP6TJj-2j7sfoJRjl_WNowcng/exec'; // Remplacez par votre clé
 const SPREADSHEET_ID = '1y1uTrvBAfnws1wCHl66n0UEqfPJqAn6SD6jwTuCn2o0';
 // ---------------------
 
